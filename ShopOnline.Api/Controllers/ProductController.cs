@@ -17,6 +17,7 @@ namespace ShopOnline.Api.Controllers
             this.productRepository = productRepository;
         }
 
+        //Get all Items
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ProductDto>>> GetItems()
         {
@@ -36,6 +37,32 @@ namespace ShopOnline.Api.Controllers
 
                     return Ok(productDtos);
 
+                }
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Failed to Retireve data from Db");
+            }
+        }
+
+        //Get Item by specified category
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<ProductDto>> GetItem(int id)
+        {
+            try
+            {
+                //can call the stop proccedure here.
+                var product = await this.productRepository.GetItem(id);
+
+                if (product == null)
+                {
+                    return BadRequest();
+                }
+                else
+                {
+                    var productCategory = await this.productRepository.GetCategory(product.CategoryId);
+                    var productDto = product.ConvertToDto(productCategory);
+                    return Ok(productDto);
                 }
             }
             catch (Exception)

@@ -11,18 +11,17 @@ else
 
     var productCount = Products.Count();
 
-    @if(productCount > 0){
-        const int itemsPerRow = 4;
-        var productRowList = new List<ProductDto>();
-
-        @for (int i = 0; i < productCount; i++)
-        {
-            productRowList = Products.Skip(i * itemsPerRow).Take(itemsPerRow).ToList();
-
-            <div class="row mt-3">
-                <DisplayProducts Products = "@productRowList"></DisplayProducts>
-            </div>
-
-        }
+    @if(productCount > 0)
+    {
+        <div class="row mt-3">
+            @foreach(var prodGroup in GetGroupedProductByCategory())
+            {
+                <h4>@GetCategoryName(prodGroup)</h4>
+                <div class="row mt-3">
+                    <DisplayProducts Products = "@prodGroup.Take(4)"></DisplayProducts> @*Take(4): to display only 4 items per category*@
+                </div>
+                <hr class="mb-3"/>
+            }
+        </div>
     }
 }

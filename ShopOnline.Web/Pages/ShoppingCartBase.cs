@@ -28,6 +28,29 @@ namespace ShopOnline.Web.Pages
 
             RemoveCartItem(id);
         }
+
+        protected async Task UpdateQtyCartItem(int id, int qty)
+        {
+            try
+            {
+                if (qty > 0)
+                {
+                    var updateItemDto = new CartItemQtyUpdateDto
+                    {
+                        CartItemId = id,
+                        Qty = qty
+                    };
+
+                    //var returnedUpdateItemDto = await this.ShoppingCartService.UpdateQty(updateItemDto);
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
         private CartItemDto GetCartItem(int id)
         {
             return ShoppingCartItems.FirstOrDefault(i => i.Id == id);

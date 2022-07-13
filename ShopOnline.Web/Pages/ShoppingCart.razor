@@ -28,7 +28,7 @@ else {
                                 Price: <b>@item.Price.ToString("C")</b>
                             @*Update Quantity*@
                                 <input type="number" @bind="@item.Qty" />
-                                <button class="btn btn-info btn-sm"
+                                <button class="btn btn-info btn-sm update-qty"
                                 @onclick ="(() => UpdateQtyCartItem_Click(item.Id, item.Qty))"
                                 >Update Qty</button>
                             </span>

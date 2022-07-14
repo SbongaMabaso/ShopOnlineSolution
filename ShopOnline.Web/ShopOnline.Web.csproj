@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <Content Remove="Pages\DisplayError.razor" />
+    <Content Remove="Shared\CartMenu.razor" />
   </ItemGroup>
 
   <ItemGroup>
@@ -26,10 +27,16 @@
 
   <ItemGroup>
     <_ContentIncludedByDefault Remove="Pages\DisplayError.razor" />
+    <_ContentIncludedByDefault Remove="Shared\CartMenu.razor" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="Pages\DisplayError.razor" />
+    <None Include="Shared\CartMenu.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Shared\CartMenu.razor" />
   </ItemGroup>
 
 </Project>

@@ -98,7 +98,7 @@ namespace ShopOnline.Api.Controllers
             }
         }
 
-        [HttpDelete]
+        [HttpDelete("{id:int}")]
         public async Task<ActionResult<CartItemDto>> DeleteItem(int id)
         {
             try
@@ -125,7 +125,7 @@ namespace ShopOnline.Api.Controllers
             }
         }
 
-        [HttpPatch("id:int")]
+        [HttpPatch("{id:int}")]
         public async Task<ActionResult<CartItemDto>> UpdateQty(int id, CartItemQtyUpdateDto cartItemQtyUpdateDto)
         {
             try

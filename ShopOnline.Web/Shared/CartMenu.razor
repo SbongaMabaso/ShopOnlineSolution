@@ -1,5 +1,5 @@
 ﻿@implements IDisposable
-@inject IshoppingCartService shoppingCartService
+@inject IShoppingCartService shoppingCartService
 
 <a href="ShoppingCart" class="btn btn-info">
     <i class="oi oi-cart"></i>&nbsp;Cart
@@ -11,7 +11,7 @@
 
     protected override void OnInitialized()
     {
-        shoppingCartService.OnShoppingCartChanged += ShoppingCartChanged;
+        shoppingCartService.OnShoppingCartChanged += ShoppingCartChanged; //subscribe from an event
     }
 
     protected void ShoppingCartChanged(int totalQty)
@@ -22,6 +22,6 @@
 
     void IDisposable.Dispose()
     {
-        shoppingCartService.OnShoppingCartChanged -= ShoppingCartChanged;
+        shoppingCartService.OnShoppingCartChanged -= ShoppingCartChanged; //unsubscribe from an event
     }
 }

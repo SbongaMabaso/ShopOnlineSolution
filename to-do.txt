@@ -1,4 +1,0 @@
-1. fix cart button
-2. fix category items to display row
-3. add wishlist page.
-4. add heart icon to add item to wishlist

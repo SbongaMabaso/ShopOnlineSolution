@@ -2,6 +2,8 @@
 using ShopOnline.Models.Dtos;
 using ShopOnline.Web.Services.Contracts;
 
+//Base class that loads when product razor application is first loaded
+
 namespace ShopOnline.Web.Pages
 {
     public class ProductsBase : ComponentBase
@@ -11,6 +13,13 @@ namespace ShopOnline.Web.Pages
 
         [Inject]
         public IShoppingCartService ShoppingCartService { get; set; }
+
+        [Inject]
+        public IManageCartItemsLocalStorageService ManageCartItemsLocalStorageService { get; set; }
+
+        [Inject]
+        public IManageProductLocalStorageService ManageProductLocalStorageService { get; set; }
+
         public IEnumerable<ProductDto> Products{ get; set; }
 
         [Inject]
@@ -22,9 +31,12 @@ namespace ShopOnline.Web.Pages
         {
             try
             {
-                Products = await ProductService.GetItems();
+                await ClearLocalStorage();
 
-                var shoppingCartItems = await ShoppingCartService.GetItems(HardCoded.UserId);
+                Products = await ManageProductLocalStorageService.GetCollection();
+
+                var shoppingCartItems = await ManageCartItemsLocalStorageService.GetCollection();
+
                 var totalQty = shoppingCartItems.Sum(i => i.Qty);
 
                 ShoppingCartService.RiseEventOnShoppingCartChanged(totalQty);
@@ -46,6 +58,12 @@ namespace ShopOnline.Web.Pages
         protected string GetCategoryName(IGrouping<int, ProductDto> groupedProductDtos)
         {
             return groupedProductDtos.FirstOrDefault(pg => pg.CategoryId == groupedProductDtos.Key).CategoryName;
+        }
+
+        private async Task ClearLocalStorage()
+        {
+            await ManageProductLocalStorageService.RemoveCollection();
+            await ManageCartItemsLocalStorageService.RemoveCollection();
         }
     }
 }

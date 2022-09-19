@@ -5,7 +5,7 @@ using ShopOnline.Web.Services.Contracts;
 
 namespace ShopOnline.Web.Pages
 {
-    public class ShoppingCartBase : ComponentBase
+    public class ShoppingCartBase:ComponentBase
     {
         [Inject]
         public IJSRuntime Js { get; set; }
@@ -16,13 +16,13 @@ namespace ShopOnline.Web.Pages
         [Inject]
         public IManageCartItemsLocalStorageService ManageCartItemsLocalStorageService { get; set; }
 
-        [Inject]
-        public IManageProductLocalStorageService ManageProductLocalStorageService { get; set; }
         public List<CartItemDto> ShoppingCartItems { get; set; }
 
         public string ErrorMessage { get; set; }
+
         protected string TotalPrice { get; set; }
         protected int TotalQuantity { get; set; }
+
         protected override async Task OnInitializedAsync()
         {
             try
@@ -32,6 +32,7 @@ namespace ShopOnline.Web.Pages
             }
             catch (Exception ex)
             {
+
                 ErrorMessage = ex.Message;
             }
         }
@@ -39,8 +40,9 @@ namespace ShopOnline.Web.Pages
         {
             var cartItemDto = await ShoppingCartService.DeleteItem(id);
 
-            RemoveCartItem(id);
+            await RemoveCartItem(id);
             CartChanged();
+
         }
 
         protected async Task UpdateQtyCartItem_Click(int id, int qty)
@@ -56,49 +58,64 @@ namespace ShopOnline.Web.Pages
                     };
 
                     var returnedUpdateItemDto = await this.ShoppingCartService.UpdateQty(updateItemDto);
+
                     await UpdateItemTotalPrice(returnedUpdateItemDto);
+                    
                     CartChanged();
+
                     await MakeUpdateQtyButtonVisible(id, false);
+
+
                 }
                 else
                 {
                     var item = this.ShoppingCartItems.FirstOrDefault(i => i.Id == id);
+
                     if (item != null)
                     {
                         item.Qty = 1;
                         item.TotalPrice = item.Price;
                     }
+
                 }
+
             }
             catch (Exception)
             {
 
                 throw;
             }
+
         }
 
         protected async Task UpdateQty_Input(int id)
         {
-            await MakeUpdateQtyButtonVisible(id, true);
+           await MakeUpdateQtyButtonVisible(id, true);
         }
-        protected async Task MakeUpdateQtyButtonVisible(int id, bool visible)
+
+        private async Task MakeUpdateQtyButtonVisible(int id, bool visible)
         {
             await Js.InvokeVoidAsync("MakeUpdateQtyButtonVisible", id, visible);
         }
+
         private async Task UpdateItemTotalPrice(CartItemDto cartItemDto)
         {
             var item = GetCartItem(cartItemDto.Id);
+
             if (item != null)
             {
                 item.TotalPrice = cartItemDto.Price * cartItemDto.Qty;
             }
+
             await ManageCartItemsLocalStorageService.SaveCollection(ShoppingCartItems);
+
         }
         private void CalculateCartSummaryTotals()
         {
             SetTotalPrice();
             SetTotalQuantity();
         }
+
         private void SetTotalPrice()
         {
             TotalPrice = this.ShoppingCartItems.Sum(p => p.TotalPrice).ToString("C");
@@ -113,18 +130,19 @@ namespace ShopOnline.Web.Pages
             return ShoppingCartItems.FirstOrDefault(i => i.Id == id);
         }
         private async Task RemoveCartItem(int id)
-        {
+        { 
             var cartItemDto = GetCartItem(id);
 
             ShoppingCartItems.Remove(cartItemDto);
 
             await ManageCartItemsLocalStorageService.SaveCollection(ShoppingCartItems);
+
+        }
+        private void CartChanged()
+        { 
+            CalculateCartSummaryTotals();
+            ShoppingCartService.RaiseEventOnShoppingCartChanged(TotalQuantity);
         }
 
-        private void CartChanged()
-        {
-            CalculateCartSummaryTotals();
-            ShoppingCartService.RiseEventOnShoppingCartChanged(TotalQuantity);
-        }
     }
 }

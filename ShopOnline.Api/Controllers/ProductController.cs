@@ -17,73 +17,80 @@ namespace ShopOnline.Api.Controllers
             this.productRepository = productRepository;
         }
 
-        //Get all Items
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ProductDto>>> GetItems()
         {
             try
             {
-                //can call the stop proccedure here.
                 var products = await this.productRepository.GetItems();
 
-                if(products == null)
-                {
-                    return NotFound();
+
+                if (products == null)
+                { 
+                   return NotFound();
                 }
                 else
                 {
                     var productDtos = products.ConvertToDto();
 
                     return Ok(productDtos);
-
                 }
+
             }
             catch (Exception)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Failed to Retireve data from Db");
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                                "Error retrieving data from the database");
+               
             }
         }
-
-        //Get Item by specified category
         [HttpGet("{id:int}")]
         public async Task<ActionResult<ProductDto>> GetItem(int id)
         {
             try
             {
-                //can call the stop proccedure here.
                 var product = await this.productRepository.GetItem(id);
-
+               
                 if (product == null)
                 {
                     return BadRequest();
                 }
                 else
                 {
+                    
                     var productDto = product.ConvertToDto();
+
                     return Ok(productDto);
                 }
+
             }
             catch (Exception)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Failed to Retireve data from Db");
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                                "Error retrieving data from the database");
+
             }
         }
 
         [HttpGet]
         [Route(nameof(GetProductCategories))]
-        public async Task<ActionResult<IEnumerable<ProductCategoryDto>>> GetProductCategories ()
+        public async Task<ActionResult<IEnumerable<ProductCategoryDto>>> GetProductCategories()
         {
             try
             {
                 var productCategories = await productRepository.GetCategories();
-                var productCategoriesDtos = productCategories.ConvertToDto();
+                
+                var productCategoryDtos = productCategories.ConvertToDto();
 
-                return Ok(productCategoriesDtos);
+                return Ok(productCategoryDtos);
+
             }
             catch (Exception)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Failed to Retireve data from Db");
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                                "Error retrieving data from the database");
             }
+
         }
 
         [HttpGet]
@@ -93,14 +100,18 @@ namespace ShopOnline.Api.Controllers
             try
             {
                 var products = await productRepository.GetItemsByCategory(categoryId);
+
                 var productDtos = products.ConvertToDto();
 
                 return Ok(productDtos);
+            
             }
             catch (Exception)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Failed to Retireve data from Db");
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                                "Error retrieving data from the database");
             }
         }
+
     }
 }

@@ -2,25 +2,23 @@
 using ShopOnline.Models.Dtos;
 using ShopOnline.Web.Services.Contracts;
 
-//Base class that loads when product razor application is first loaded
-
 namespace ShopOnline.Web.Pages
 {
-    public class ProductsBase : ComponentBase
+    public class ProductsBase:ComponentBase
     {
         [Inject]
         public IProductService ProductService { get; set; }
-
+        
         [Inject]
         public IShoppingCartService ShoppingCartService { get; set; }
 
         [Inject]
-        public IManageCartItemsLocalStorageService ManageCartItemsLocalStorageService { get; set; }
+        public IManageProductsLocalStorageService ManageProductsLocalStorageService { get; set; }
 
         [Inject]
-        public IManageProductLocalStorageService ManageProductLocalStorageService { get; set; }
+        public IManageCartItemsLocalStorageService ManageCartItemsLocalStorageService { get; set; }
 
-        public IEnumerable<ProductDto> Products{ get; set; }
+        public IEnumerable<ProductDto> Products { get; set; }
 
         [Inject]
         public NavigationManager NavigationManager { get; set; }
@@ -33,23 +31,25 @@ namespace ShopOnline.Web.Pages
             {
                 await ClearLocalStorage();
 
-                Products = await ManageProductLocalStorageService.GetCollection();
+                Products =  await ManageProductsLocalStorageService.GetCollection();
 
                 var shoppingCartItems = await ManageCartItemsLocalStorageService.GetCollection();
-
+               
                 var totalQty = shoppingCartItems.Sum(i => i.Qty);
 
-                ShoppingCartService.RiseEventOnShoppingCartChanged(totalQty);
+                ShoppingCartService.RaiseEventOnShoppingCartChanged(totalQty);
+
             }
             catch (Exception ex)
             {
                 ErrorMessage = ex.Message;
+                
             }
             
         }
 
-        protected IOrderedEnumerable<IGrouping<int, ProductDto>> GetGroupedProductByCategory()
-        {
+        protected IOrderedEnumerable<IGrouping<int, ProductDto>> GetGroupedProductsByCategory()
+        { 
             return from product in Products
                    group product by product.CategoryId into prodByCatGroup
                    orderby prodByCatGroup.Key
@@ -62,8 +62,9 @@ namespace ShopOnline.Web.Pages
 
         private async Task ClearLocalStorage()
         {
-            await ManageProductLocalStorageService.RemoveCollection();
+            await ManageProductsLocalStorageService.RemoveCollection();
             await ManageCartItemsLocalStorageService.RemoveCollection();
         }
+
     }
 }

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -7,37 +7,18 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="Pages\DisplayError.razor" />
-    <Content Remove="Shared\CartMenu.razor" />
+    <None Include="..\.editorconfig" Link=".editorconfig" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Blazored.LocalStorage" Version="4.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.6" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.6" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.1" PrivateAssets="all" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\ShopOnline.Models\ShopOnline.Models.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <UpToDateCheckInput Remove="Pages\DisplayError.razor" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <_ContentIncludedByDefault Remove="Pages\DisplayError.razor" />
-    <_ContentIncludedByDefault Remove="Shared\CartMenu.razor" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Pages\DisplayError.razor" />
-    <None Include="Shared\CartMenu.razor" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <UpToDateCheckInput Remove="Shared\CartMenu.razor" />
   </ItemGroup>
 
 </Project>

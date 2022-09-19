@@ -16,8 +16,9 @@ namespace ShopOnline.Api.Repositories
         public async Task<IEnumerable<ProductCategory>> GetCategories()
         {
             var categories = await this.shopOnlineDbContext.ProductCategories.ToListAsync();
-
-            return categories;
+           
+            return categories; 
+        
         }
 
         public async Task<ProductCategory> GetCategory(int id)
@@ -36,17 +37,18 @@ namespace ShopOnline.Api.Repositories
 
         public async Task<IEnumerable<Product>> GetItems()
         {
-            //Get all items and return them to client
-            var products = await this.shopOnlineDbContext.Products.Include(p => p.ProductCategory).ToArrayAsync();
+            var products = await this.shopOnlineDbContext.Products
+                                     .Include(p => p.ProductCategory).ToListAsync();
 
             return products;
+        
         }
 
         public async Task<IEnumerable<Product>> GetItemsByCategory(int id)
         {
             var products = await this.shopOnlineDbContext.Products
-                                        .Include(p => p.ProductCategory)
-                                        .Where(p => p.CategoryId == id).ToListAsync();
+                                     .Include(p => p.ProductCategory)
+                                     .Where(p => p.CategoryId == id).ToListAsync();
             return products;
         }
     }

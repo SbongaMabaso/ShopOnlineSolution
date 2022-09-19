@@ -1,5 +1,4 @@
-﻿@using ShopOnline.Web.Services.Contracts
-@implements IDisposable
+﻿@implements IDisposable
 @inject IShoppingCartService shoppingCartService
 
 <a href="ShoppingCart" class="btn btn-info">
@@ -12,17 +11,18 @@
 
     protected override void OnInitialized()
     {
-        shoppingCartService.OnShoppingCartChanged += ShoppingCartChanged; //subscribe from an event
+        shoppingCartService.OnShoppingCartChanged += ShoppingCartChanged;
     }
 
     protected void ShoppingCartChanged(int totalQty)
     {
         shoppingCartItemCount = totalQty;
-        StateHasChanged(); //Blazer function, telling blazer to change state
+        StateHasChanged();
     }
 
     void IDisposable.Dispose()
     {
-        shoppingCartService.OnShoppingCartChanged -= ShoppingCartChanged; //unsubscribe from an event
+        shoppingCartService.OnShoppingCartChanged -= ShoppingCartChanged;
     }
+
 }

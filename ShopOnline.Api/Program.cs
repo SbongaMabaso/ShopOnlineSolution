@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Net.Http.Headers;
-using ShopOnline.Api.Controllers;
 using ShopOnline.Api.Data;
 using ShopOnline.Api.Repositories;
 using ShopOnline.Api.Repositories.Contracts;
@@ -14,12 +13,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Add Db services to the container
-builder.Services.AddDbContextPool<ShopOnlineDbContext>(option =>
-    option.UseSqlServer(builder.Configuration.GetConnectionString("ShopOnlineCon"))
+//***IMPORTANT INSTRUCTION HERE - MUST CONFIGURE CONNECTION BEFORE RUNNING MIGRATIONS
+builder.Services.AddDbContextPool<ShopOnlineDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("ShopOnlineConnection"))
 );
 
-//Register a product repository class
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IShoppingCartRepository, ShoppingCartRepository>();
 
@@ -33,7 +31,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors(policy =>
-    policy.WithOrigins("http://localhost:7148", "https://localhost:7148")
+    policy.WithOrigins("http://localhost:7060", "https://localhost:7060")
     .AllowAnyMethod()
     .WithHeaders(HeaderNames.ContentType)
 );

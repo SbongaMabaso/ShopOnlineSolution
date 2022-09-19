@@ -4,31 +4,35 @@ using ShopOnline.Web.Services.Contracts;
 
 namespace ShopOnline.Web.Pages
 {
-    public class ProductsByCategoryBase: ComponentBase
+    public class ProductsByCategoryBase:ComponentBase
     {
         [Parameter]
         public int CategoryId { get; set; }
-
         [Inject]
         public IProductService ProductService { get; set; }
 
         [Inject]
-        public IManageProductLocalStorageService ManageProductLocalStorageService { get; set; }
+        public IManageProductsLocalStorageService ManageProductsLocalStorageService { get; set; }
+
         public IEnumerable<ProductDto> Products { get; set; }
         public string CategoryName { get; set; }
         public string ErrorMessage { get; set; }
+
         protected override async Task OnParametersSetAsync()
         {
             try
             {
                 Products = await GetProductCollectionByCategoryId(CategoryId);
-                if (Products != null && Products.Count() > 0)
+                
+                if(Products != null && Products.Count() > 0)
                 {
                     var productDto = Products.FirstOrDefault(p => p.CategoryId == CategoryId);
+                    
                     if (productDto != null)
                     {
                         CategoryName = productDto.CategoryName;
                     }
+                
                 }
             }
             catch (Exception ex)
@@ -39,8 +43,9 @@ namespace ShopOnline.Web.Pages
 
         private async Task<IEnumerable<ProductDto>> GetProductCollectionByCategoryId(int categoryId)
         {
-            var productCollection = await ManageProductLocalStorageService.GetCollection();
-            if (productCollection != null)
+            var productCollection = await ManageProductsLocalStorageService.GetCollection();
+
+            if(productCollection != null)
             {
                 return productCollection.Where(p => p.CategoryId == categoryId);
             }
@@ -48,6 +53,8 @@ namespace ShopOnline.Web.Pages
             {
                 return await ProductService.GetItemsByCategory(categoryId);
             }
+
         }
+
     }
 }

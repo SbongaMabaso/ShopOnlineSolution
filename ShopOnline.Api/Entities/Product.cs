@@ -14,5 +14,6 @@ namespace ShopOnline.Api.Entities
 
         [ForeignKey("CategoryId")]
         public ProductCategory ProductCategory { get; set; }
+
     }
 }

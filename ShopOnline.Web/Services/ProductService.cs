@@ -18,23 +18,25 @@ namespace ShopOnline.Web.Services
             try
             {
                 var response = await httpClient.GetAsync($"api/Product/{id}");
+
                 if (response.IsSuccessStatusCode)
                 {
                     if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
                     {
                         return default(ProductDto);
                     }
+
                     return await response.Content.ReadFromJsonAsync<ProductDto>();
                 }
-                else
-                {
+                else 
+                { 
                     var message = await response.Content.ReadAsStringAsync();
-                    throw new Exception(message);
+                    throw new Exception($"Http status code: {response.StatusCode} message: {message}");
                 }
             }
             catch (Exception)
             {
-                //Log Exception
+                //Log exception
                 throw;
             }
         }
@@ -44,19 +46,22 @@ namespace ShopOnline.Web.Services
             try
             {
                 var response = await this.httpClient.GetAsync("api/Product");
+
                 if (response.IsSuccessStatusCode)
                 {
                     if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
                     {
                         return Enumerable.Empty<ProductDto>();
                     }
+
                     return await response.Content.ReadFromJsonAsync<IEnumerable<ProductDto>>();
                 }
                 else
                 {
                     var message = await response.Content.ReadAsStringAsync();
-                    throw new Exception(message);
+                    throw new Exception($"Http status code: {response.StatusCode} message: {message}");
                 }
+      
             }
             catch (Exception)
             {
@@ -70,6 +75,7 @@ namespace ShopOnline.Web.Services
             try
             {
                 var response = await httpClient.GetAsync($"api/Product/{categoryId}/GetItemsByCategory");
+
                 if (response.IsSuccessStatusCode)
                 {
                     if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
@@ -81,12 +87,12 @@ namespace ShopOnline.Web.Services
                 else
                 {
                     var message = await response.Content.ReadAsStringAsync();
-                    throw new Exception($"Http status Code - {response.StatusCode} Message - {message}");
+                    throw new Exception($"Http Status Code - {response.StatusCode} Message - {message}");
                 }
             }
             catch (Exception)
             {
-
+                //Log exception
                 throw;
             }
         }
@@ -96,9 +102,10 @@ namespace ShopOnline.Web.Services
             try
             {
                 var response = await httpClient.GetAsync("api/Product/GetProductCategories");
-                if (response.IsSuccessStatusCode)
+
+                if(response.IsSuccessStatusCode)
                 {
-                    if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
+                    if(response.StatusCode == System.Net.HttpStatusCode.NoContent)
                     {
                         return Enumerable.Empty<ProductCategoryDto>();
                     }
@@ -107,12 +114,12 @@ namespace ShopOnline.Web.Services
                 else
                 {
                     var message = await response.Content.ReadAsStringAsync();
-                    throw new Exception($"Http status Code - {response.StatusCode} Message - {message}");
+                    throw new Exception($"Http Status Code - {response.StatusCode} Message - {message}");
                 }
             }
             catch (Exception)
             {
-
+                //Log exception
                 throw;
             }
         }

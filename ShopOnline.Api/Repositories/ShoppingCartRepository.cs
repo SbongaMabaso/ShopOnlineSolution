@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿
+using Microsoft.EntityFrameworkCore;
 using ShopOnline.Api.Data;
 using ShopOnline.Api.Entities;
 using ShopOnline.Api.Repositories.Contracts;
@@ -14,12 +15,13 @@ namespace ShopOnline.Api.Repositories
         {
             this.shopOnlineDbContext = shopOnlineDbContext;
         }
-        //Check if item already adde to the shoping cart
+
         private async Task<bool> CartItemExists(int cartId, int productId)
         {
-            return await this.shopOnlineDbContext.CartItems.AnyAsync(x => x.CartId == cartId && x.ProductId == productId);
+            return await this.shopOnlineDbContext.CartItems.AnyAsync(c => c.CartId == cartId &&
+                                                                     c.ProductId == productId);
+
         }
-        //Add item to shoping cart
         public async Task<CartItem> AddItem(CartItemToAddDto cartItemToAddDto)
         {
             if (await CartItemExists(cartItemToAddDto.CartId, cartItemToAddDto.ProductId) == false)
@@ -40,7 +42,9 @@ namespace ShopOnline.Api.Repositories
                     return result.Entity;
                 }
             }
+
             return null;
+
         }
 
         public async Task<CartItem> DeleteItem(int id)
@@ -52,12 +56,13 @@ namespace ShopOnline.Api.Repositories
                 this.shopOnlineDbContext.CartItems.Remove(item);
                 await this.shopOnlineDbContext.SaveChangesAsync();
             }
+            
             return item;
+
         }
 
         public async Task<CartItem> GetItem(int id)
         {
-#pragma warning disable CS8603 // Possible null reference return.
             return await (from cart in this.shopOnlineDbContext.Carts
                           join cartItem in this.shopOnlineDbContext.CartItems
                           on cart.Id equals cartItem.CartId
@@ -65,26 +70,25 @@ namespace ShopOnline.Api.Repositories
                           select new CartItem
                           {
                               Id = cartItem.Id,
-                              CartId = cartItem.CartId,
-                              Qty = cartItem.Qty,
                               ProductId = cartItem.ProductId,
+                              Qty = cartItem.Qty,
+                              CartId = cartItem.CartId
                           }).SingleOrDefaultAsync();
-#pragma warning restore CS8603 // Possible null reference return.
         }
 
         public async Task<IEnumerable<CartItem>> GetItems(int userId)
         {
             return await (from cart in this.shopOnlineDbContext.Carts
-                         join cartItem in this.shopOnlineDbContext.CartItems
-                         on cart.Id equals cartItem.CartId
-                         where cart.UserId == userId
-                         select new CartItem
-                         {
-                             Id = cartItem.Id,
-                             CartId = cartItem.CartId,
-                             Qty = cartItem.Qty,
-                             ProductId = cartItem.ProductId,
-                         }).ToListAsync();
+                          join cartItem in this.shopOnlineDbContext.CartItems
+                          on cart.Id equals cartItem.CartId
+                          where cart.UserId == userId
+                          select new CartItem
+                          {
+                              Id = cartItem.Id,
+                              ProductId = cartItem.ProductId,
+                              Qty = cartItem.Qty,
+                              CartId = cartItem.CartId
+                          }).ToListAsync();
         }
 
         public async Task<CartItem> UpdateQty(int id, CartItemQtyUpdateDto cartItemQtyUpdateDto)

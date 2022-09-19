@@ -79,7 +79,7 @@ namespace ShopOnline.Web.Services
                 else
                 {
                     var message = await response.Content.ReadAsStringAsync();
-                    throw new Exception($"Http status code: {response.StatusCode} Message - {message}");
+                    throw new Exception($"Http status code: {response.StatusCode} Message: {message}");
                 }
             }
             catch (Exception)

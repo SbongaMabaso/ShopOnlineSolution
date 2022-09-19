@@ -30,7 +30,7 @@ namespace ShopOnline.Api.Repositories
                                   {
                                       CartId = cartItemToAddDto.CartId,
                                       ProductId = product.Id,
-                                      Qty = cartItemToAddDto.Qty,
+                                      Qty = cartItemToAddDto.Qty
                                   }).SingleOrDefaultAsync();
 
                 if (item != null)
